@@ -1,34 +1,29 @@
-import { useMemo } from "react";
-import { Emoji } from "./Emoji";
+import { Emoji } from './Emoji';
 
-interface TargetEmojiProps {
+interface ITargetEmojiProps {
   health: number;
   damaged: boolean;
 }
 
-export const TargetEmoji: React.FC<TargetEmojiProps> = ({
-  health,
-  damaged,
-}) => {
-  const emoji = useMemo(() => {
-    let options: string[] = [];
-    if (damaged) {
-      if (health > 80) {
-        options = ["😒", "😔", "😟", "😵‍💫"];
-      } else if (health > 60) {
-        options = ["😣", "😣", "😖"];
-      } else if (health > 40) {
-        options = ["😖", "😖", "😫"];
-      } else if (health > 20) {
-        options = ["😫", "😫", "😵"];
-      } else {
-        options = ["😵"];
-      }
+export const TargetEmoji = ({ health, damaged }: ITargetEmojiProps) => {
+  let options: string[] = [];
+  if (damaged) {
+    if (health > 80) {
+      options = ['😒', '😔', '😟', '😵‍💫'];
+    } else if (health > 60) {
+      options = ['😣', '😣', '😖'];
+    } else if (health > 40) {
+      options = ['😖', '😖', '😫'];
+    } else if (health > 20) {
+      options = ['😫', '😫', '😵'];
     } else {
-      options = ["😀", "😁", "😉", "😜", "😊", "😏", "😬"];
+      options = ['😵'];
     }
-    return options[Math.floor(Math.random() * options.length)];
-  }, [damaged, health]);
+  } else {
+    options = ['😀', '😁', '😉', '😜', '😊', '😏', '😬'];
+  }
+
+  const emoji = options[Math.floor(Math.random() * options.length)];
 
   return <Emoji size={300}>{emoji}</Emoji>;
 };

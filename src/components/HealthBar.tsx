@@ -1,54 +1,35 @@
-import styled from "styled-components";
-import { Emoji } from "./Emoji";
+import { Emoji } from './Emoji';
 
-interface HealthBarProps {
+interface IHealthBarProps {
   health: number;
+  totalHealth: number;
 }
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 0 auto;
-  width: fit-content;
-`;
+const HEALTH_INCREMENT = 12;
+const healthArray = Array(HEALTH_INCREMENT).fill(0);
 
-const RightAlign = styled.div`
-  text-align: right;
-`;
+export const HealthBar = ({ health, totalHealth }: IHealthBarProps) => {
+  const incrementValue = totalHealth / HEALTH_INCREMENT;
 
-export const HealthBar: React.FC<HealthBarProps> = ({ health }) => {
-  const healthArray = Array(10).fill(0);
+  const getEmojiCharacter = (index: number) => {
+    if (index * incrementValue > health) return '⬜️';
+    const healthPercentage = health / totalHealth;
+    if (healthPercentage >= 0.75) return '🟩';
+    if (healthPercentage >= 0.5) return '🟨';
+    if (healthPercentage >= 0.25) return '🟧';
+    return '🟥';
+  };
+
   return (
-    <Container>
+    <div className="flex flex-col gap-2.5 mx-auto w-fit">
       <div>EMOJI</div>
-      <div>
-        {healthArray.map((_, index) => {
-          const threshold = index * 10;
-          let emoji;
-          if (threshold <= health) {
-            emoji = "🟩";
-          } else {
-            const difference = threshold - health;
-            if (difference < 2.5) {
-              emoji = "🟨";
-            } else if (difference < 5) {
-              emoji = "🟧";
-            } else if (difference < 7.5) {
-              emoji = "🟥";
-            } else {
-              emoji = "⬜️";
-            }
-          }
-
-          return emoji ? (
-            <Emoji key={index} size={24}>
-              {emoji}
-            </Emoji>
-          ) : null;
-        })}
+      <div className="flex">
+        {healthArray.map((_, index) => (
+          <Emoji key={index} size={25}>
+            {getEmojiCharacter(index)}
+          </Emoji>
+        ))}
       </div>
-      <RightAlign>{Math.max(Math.floor(health), 0)}/100</RightAlign>
-    </Container>
+    </div>
   );
 };

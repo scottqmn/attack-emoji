@@ -1,31 +1,25 @@
-import styled from "styled-components";
+import clsx from 'clsx';
 
-interface EmojiProps extends React.HTMLAttributes<HTMLSpanElement> {
+interface IEmojiProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
   size?: number;
 }
 
-const Outer = styled.span`
-  display: inline-block;
-  width: var(--size, 48px);
-  height: var(--size, 48px);
-  font-size: var(--size, 48px);
-  line-height: 0.75;
-  user-select: none;
-`;
-
-export const Emoji: React.FC<EmojiProps> = ({
+export const Emoji = ({
   children,
   className,
-  size = 48,
+  size,
+  style = {},
   ...props
-}) => (
-  <Outer
-    className={className}
-    style={{ "--size": `${size}px` } as React.CSSProperties}
+}: IEmojiProps) => (
+  <div
+    className={clsx('leading-none aspect-square select-none', className)}
+    style={{ fontSize: `${typeof size === 'number' ? size : 16}px`, ...style }}
     {...props}
   >
-    {children}
-  </Outer>
+    <div className="relative -top-[0.125em] pointer-events-none">
+      {children}
+    </div>
+  </div>
 );
